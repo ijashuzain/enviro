@@ -1,0 +1,10 @@
+builders:
+  enviro:
+    import: "package:enviro/builder.dart"
+    builder_factories: ["enviroBuilder"]
+    build_extensions:
+      r'$lib$':
+        - gen/enviro.gen.dart
+    auto_apply: dependents
+    build_to: source
+    runs_before: [":enviro"]
