@@ -1,6 +1,7 @@
 # Enviro
 
-[![pub package](https://img.shields.io/pub/v/enviro.svg)](https://pub.dev/packages/enviro)
+![Pub](https://img.shields.io/pub/v/enviro.svg)
+![Logo](https://raw.githubusercontent.com/ijashuzain/enviro/main/misc/banner.jpg)
 
 A **build_runner** compatible package that generates **type-safe environment configuration** from `.env` files with **multi-environment support** for Flutter and Dart applications.
 
