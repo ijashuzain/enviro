@@ -1,6 +1,6 @@
 name: enviro
 description: A build_runner compatible package that generates type-safe environment configuration from .env files with multi-environment support.
-version: 1.0.0
+version: 1.0.0+1
 homepage: https://github.com/ijashuzain/enviro
 
 environment:
