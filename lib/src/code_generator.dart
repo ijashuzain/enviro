@@ -206,6 +206,19 @@ class CodeGenerator {
     buffer.writeln('  }');
     buffer.writeln();
 
+    // Helper method to set value
+    buffer.writeln('  /// Set value in current environment');
+    buffer.writeln('  static void _setValue(String key, String value) {');
+    buffer.writeln('    if (!_isInitialized) {');
+    buffer.writeln("      throw Exception('Enviro not initialized. Call await Enviro.setEnvironment() or await Enviro.initialize() before setting values.');");
+    buffer.writeln('    }');
+    buffer.writeln();
+    buffer.writeln('    // Ensure cache exists for current environment');
+    buffer.writeln('    _cache[_currentEnvironment] ??= <String, String>{};');
+    buffer.writeln('    _cache[_currentEnvironment]![key] = value;');
+    buffer.writeln('  }');
+    buffer.writeln();
+
     // Initialize method (optional - auto-loads DEFAULT)
     buffer.writeln('  /// Initialize with DEFAULT environment');
     buffer.writeln('  /// This is optional - you can directly call setEnvironment()');
@@ -214,9 +227,10 @@ class CodeGenerator {
     buffer.writeln('  }');
     buffer.writeln();
 
-    // Generate getters for each key
+    // Generate getters and setters for each key
     for (final key in allKeys) {
       buffer.writeln(_generateGetter(key));
+      buffer.writeln(_generateSetter(key));
     }
 
     buffer.writeln('}');
@@ -254,6 +268,34 @@ class CodeGenerator {
       buffer.writeln("=> double.parse(_getValue('$key'));");
     } else if (type == 'bool') {
       buffer.writeln("=> _getValue('$key').toLowerCase() == 'true';");
+    }
+
+    buffer.writeln();
+
+    return buffer.toString();
+  }
+
+  /// Generate a setter for a specific key
+  String _generateSetter(String key) {
+    final buffer = StringBuffer();
+
+    // Convert KEY_NAME to keyName (camelCase)
+    final setterName = _toCamelCase(key);
+
+    // Detect type based on values across all environments
+    final type = _detectType(key);
+
+    buffer.writeln('  /// Set $key in current environment');
+    buffer.write('  static set $setterName($type value) ');
+
+    if (type == 'String') {
+      buffer.writeln("{ _setValue('$key', value); }");
+    } else if (type == 'int') {
+      buffer.writeln("{ _setValue('$key', value.toString()); }");
+    } else if (type == 'double') {
+      buffer.writeln("{ _setValue('$key', value.toString()); }");
+    } else if (type == 'bool') {
+      buffer.writeln("{ _setValue('$key', value.toString()); }");
     }
 
     buffer.writeln();
